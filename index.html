@@ -279,7 +279,7 @@ tr:hover td{background:var(--surface2)}
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">
-      <h1>The <span>Lira</span> Box</h1>
+      <h1>Finanças do <span>Casal</span></h1>
       <p>Painel Financeiro do Casal &nbsp;·&nbsp; Acesso Privado</p>
     </div>
     <div class="login-divider"></div>
@@ -303,7 +303,7 @@ tr:hover td{background:var(--surface2)}
 <div id="app">
   <!-- Topbar -->
   <div class="topbar">
-    <div class="topbar-brand">The <span>Lira</span> Box <small style="font-size:13px;font-weight:400;color:var(--muted);font-family:var(--font-body)">· Finanças</small></div>
+    <div class="topbar-brand">Finanças do <span>Casal</span> <small style="font-size:13px;font-weight:400;color:var(--muted);font-family:var(--font-body)">· Anderson e Leandro</small></div>
     <div class="topbar-user">
       <div class="avatar" id="avatarInitial">L</div>
       <div class="user-info">
@@ -527,8 +527,8 @@ tr:hover td{background:var(--surface2)}
 // ═══════════════════════════════════════════════════════════════
 const DEFAULT_CONFIG = {
   users: {
-    lira:   { name: "Lira", password: "lira2025", role: "admin" },
-    marido: { name: "Marido", password: "marido2025", role: "editor" }
+    anderson:   { name: "Lira", password: "lira2025", role: "admin" },
+    leandro: { name: "Leco", password: "leco2025", role: "editor" }
   },
   renda1: 4924,
   renda2: 4142,
@@ -548,12 +548,12 @@ let state = {
 
 // ─── Subcategorias ────────────────────────────────────────────
 const SUBCATS = {
-  "RENDA":["Salário - Lira (MEI)","Salário - Marido (CLT)","Freelance","Outros"],
+  "RENDA":["Salário - Anderson (MEI)","Salário - Leandro (CLT)","Freelance","Outros"],
   "MORADIA":["Aluguel","Condomínio","Água / Luz / Gás","Internet / TV","Manutenção"],
   "ALIMENTAÇÃO":["Supermercado","Cozinheira (3x/mês)","Restaurante / Delivery","Padaria","Outros"],
   "TRANSPORTE":["Combustível","Uber / Táxi","Estacionamento","Manutenção do carro","Transporte público"],
   "SAÚDE":["Plano de saúde","Farmácia","Consultas / Exames","Academia","Outros"],
-  "EDUCAÇÃO":["Inglês - Lira","Inglês - Marido","Cursos online","Livros","Outros"],
+  "EDUCAÇÃO":["Inglês - Anderson","Inglês - Leandro","Cursos online","Livros","Outros"],
   "LAZER":["Streaming","Passeios","Viagens","Presentes / Datas","Bares / Festas"],
   "CARTÃO":["Fatura Cartão 1","Fatura Cartão 2","Fatura Cartão 3","Fatura Cartão 4"],
   "META IMÓVEL":["Investimento / Poupança","CDB","Tesouro Direto","Outros"],
