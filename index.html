@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finanças do Casal</title>
+<title>Finanças | Leco e Lira</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -279,8 +279,8 @@ tr:hover td{background:var(--surface2)}
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">
-      <h1>Finanças do <span>Casal</span></h1>
-      <p>Painel Financeiro de Anderson e Leandro &nbsp;·&nbsp; Acesso Privado</p>
+      <h1>Finance <span>Book</span> </h1>
+      <p>Painel Financeiro do Casal &nbsp;·&nbsp; Acesso Privado</p>
     </div>
     <div class="login-divider"></div>
     <div class="field-group">
@@ -303,7 +303,7 @@ tr:hover td{background:var(--surface2)}
 <div id="app">
   <!-- Topbar -->
   <div class="topbar">
-    <div class="topbar-brand">Finanças do <span>Casal</span> <small style="font-size:13px;font-weight:400;color:var(--muted);font-family:var(--font-body)">· Anderson e Leandro</small></div>
+    <div class="topbar-brand">The <span>Lira</span> Box <small style="font-size:13px;font-weight:400;color:var(--muted);font-family:var(--font-body)">· Finanças</small></div>
     <div class="topbar-user">
       <div class="avatar" id="avatarInitial">L</div>
       <div class="user-info">
@@ -358,16 +358,32 @@ tr:hover td{background:var(--surface2)}
             <option value="">Selecione...</option>
             <option>RENDA</option><option>MORADIA</option><option>ALIMENTAÇÃO</option>
             <option>TRANSPORTE</option><option>SAÚDE</option><option>EDUCAÇÃO</option>
-            <option>LAZER</option><option>CARTÃO</option><option>META IMÓVEL</option><option>OUTROS</option>
+            <option>LAZER</option><option>META IMÓVEL</option><option>OUTROS</option>
+            <option value="__add__">➕ Adicionar categoria...</option>
           </select>
         </div>
         <div class="form-field">
           <label>Subcategoria</label>
-          <select id="fSubcat"></select>
+          <select id="fSubcat" onchange="checkAddSubcat()">
+            <option value="">Selecione...</option>
+          </select>
         </div>
         <div class="form-field">
           <label>Valor (R$)</label>
           <input type="number" id="fAmount" placeholder="0,00" min="0" step="0.01">
+        </div>
+        <div class="form-field">
+          <label>Forma de Pagamento</label>
+          <select id="fPayment">
+            <option value="">Selecione...</option>
+            <option value="Crédito">💳 Crédito</option>
+            <option value="Débito">🏦 Débito</option>
+            <option value="Pix">⚡ Pix</option>
+            <option value="Dinheiro">💵 Dinheiro</option>
+            <option value="Alimentação">🍽️ Vale Alimentação</option>
+            <option value="Refeição">🍛 Vale Refeição</option>
+            <option value="Outros">🔹 Outros</option>
+          </select>
         </div>
         <div class="form-field">
           <label>Tipo</label>
@@ -397,7 +413,7 @@ tr:hover td{background:var(--surface2)}
       </div>
       <div style="overflow-x:auto">
         <table>
-          <thead><tr><th>Mês</th><th>Categoria</th><th>Subcategoria</th><th>Valor</th><th>Tipo</th><th>Obs.</th><th>Por</th><th></th></tr></thead>
+          <thead><tr><th>Mês</th><th>Categoria</th><th>Subcategoria</th><th>Valor</th><th>Pagamento</th><th>Tipo</th><th>Obs.</th><th>Por</th><th></th></tr></thead>
           <tbody id="txBody"></tbody>
         </table>
       </div>
@@ -490,11 +506,11 @@ tr:hover td{background:var(--surface2)}
       <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Altere as senhas de acesso. As senhas são armazenadas localmente neste dispositivo.</p>
       <div class="form-grid">
         <div class="form-field">
-          <label>Usuário: lira (você)</label>
+          <label>Usuário: anderson (você)</label>
           <input type="password" id="pw1" placeholder="Nova senha">
         </div>
         <div class="form-field">
-          <label>Usuário: marido</label>
+          <label>Usuário: leandro</label>
           <input type="password" id="pw2" placeholder="Nova senha">
         </div>
       </div>
@@ -504,7 +520,7 @@ tr:hover td{background:var(--surface2)}
       <h3>💰 Rendas Mensais</h3>
       <div class="form-grid">
         <div class="form-field"><label>Sua renda líquida (MEI)</label><input type="number" id="cfgRenda1" value="4924"></div>
-        <div class="form-field"><label>Renda do marido (CLT líq.)</label><input type="number" id="cfgRenda2" value="4142"></div>
+        <div class="form-field"><label>Renda do Leandro (CLT líq.)</label><input type="number" id="cfgRenda2" value="4142"></div>
         <div class="form-field"><label>Meta de investimento/mês</label><input type="number" id="cfgMeta" value="1500"></div>
         <div class="form-field"><label>Rendimento anual (%)</label><input type="number" id="cfgYield" value="10"></div>
       </div>
@@ -527,14 +543,16 @@ tr:hover td{background:var(--surface2)}
 // ═══════════════════════════════════════════════════════════════
 const DEFAULT_CONFIG = {
   users: {
-    anderson:   { name: "Lira", password: "lira2025", role: "admin" },
-    leandro: { name: "Leco", password: "leco2025", role: "editor" }
+    anderson: { name: "Anderson", password: "lira2025", role: "admin" },
+    leandro:  { name: "Leandro",  password: "leco2025",  role: "editor" }
   },
   renda1: 4924,
   renda2: 4142,
   metaMensal: 1500,
   yieldAnual: 10,
-  scriptUrl: ""
+  scriptUrl: "",
+  customCats: [],
+  customSubcats: {}
 };
 
 // ─── Estado global ────────────────────────────────────────────
@@ -555,7 +573,6 @@ const SUBCATS = {
   "SAÚDE":["Plano de saúde","Farmácia","Consultas / Exames","Academia","Outros"],
   "EDUCAÇÃO":["Inglês - Anderson","Inglês - Leandro","Cursos online","Livros","Outros"],
   "LAZER":["Streaming","Passeios","Viagens","Presentes / Datas","Bares / Festas"],
-  "CARTÃO":["Fatura Cartão 1","Fatura Cartão 2","Fatura Cartão 3","Fatura Cartão 4"],
   "META IMÓVEL":["Investimento / Poupança","CDB","Tesouro Direto","Outros"],
   "OUTROS":["Roupas / Calçados","Higiene / Beleza","Imprevistos","Assinaturas","Pets"]
 };
@@ -563,12 +580,12 @@ const SUBCATS = {
 const CAT_COLORS = {
   "RENDA":"#27AE60","MORADIA":"#2471A3","ALIMENTAÇÃO":"#F39C12",
   "TRANSPORTE":"#E74C3C","SAÚDE":"#8E44AD","EDUCAÇÃO":"#1ABC9C",
-  "LAZER":"#E67E22","CARTÃO":"#C0392B","META IMÓVEL":"#C5A55A","OUTROS":"#95A5A6"
+  "LAZER":"#E67E22","META IMÓVEL":"#C5A55A","OUTROS":"#95A5A6"
 };
 
 const LIMITES = {
   "MORADIA":25,"ALIMENTAÇÃO":15,"TRANSPORTE":10,"SAÚDE":5,
-  "EDUCAÇÃO":5,"LAZER":5,"CARTÃO":20,"META IMÓVEL":15,"OUTROS":5
+  "EDUCAÇÃO":5,"LAZER":5,"META IMÓVEL":15,"OUTROS":5
 };
 
 // ─── Utils ────────────────────────────────────────────────────
@@ -610,8 +627,9 @@ function populateMonthSelects(){
 function loadData(){
   state.transactions = JSON.parse(localStorage.getItem("tlb_transactions")||"[]");
   state.config = JSON.parse(localStorage.getItem("tlb_config")||JSON.stringify(DEFAULT_CONFIG));
-  // Merge default users if missing
   if(!state.config.users) state.config.users = DEFAULT_CONFIG.users;
+  if(!state.config.customCats) state.config.customCats=[];
+  if(!state.config.customSubcats) state.config.customSubcats={};
 }
 function saveData(){
   localStorage.setItem("tlb_transactions", JSON.stringify(state.transactions));
@@ -631,6 +649,7 @@ function doLogin(){
     $("userName").textContent=state.currentUser.name;
     $("userRole").textContent=state.currentUser.role==="admin"?"Administrador":"Editor";
     populateMonthSelects();
+    refreshCatSelect();
     renderAll();
     $("cfgScriptUrl").value=state.config.scriptUrl||"";
     $("cfgRenda1").value=state.config.renda1||4924;
@@ -666,13 +685,66 @@ function switchTab(name){
 }
 
 // ─── Subcats ──────────────────────────────────────────────────
+function getAllCats(){
+  const custom=(state.config.customCats||[]);
+  return [...Object.keys(SUBCATS),...custom];
+}
+
+function refreshCatSelect(){
+  const sel=$("fCat"); const cur=sel.value;
+  sel.innerHTML='<option value="">Selecione...</option>';
+  getAllCats().forEach(c=>{
+    const o=document.createElement("option"); o.value=c; o.textContent=c; sel.appendChild(o);
+  });
+  const add=document.createElement("option"); add.value="__add__"; add.textContent="➕ Adicionar categoria..."; sel.appendChild(add);
+  if(cur && cur!=="__add__") sel.value=cur;
+}
+
 function updateSubcats(){
   const cat=$("fCat").value;
+  if(cat==="__add__"){
+    const nova=prompt("Nome da nova categoria (em maiúsculas):","");
+    if(nova && nova.trim()){
+      const nome=nova.trim().toUpperCase();
+      if(!state.config.customCats) state.config.customCats=[];
+      if(!state.config.customCats.includes(nome)){
+        state.config.customCats.push(nome);
+        if(!state.config.customSubcats) state.config.customSubcats={};
+        state.config.customSubcats[nome]=[];
+        saveData();
+      }
+      refreshCatSelect();
+      $("fCat").value=nome;
+    } else {
+      $("fCat").value="";
+    }
+    updateSubcats(); return;
+  }
   const sc=$("fSubcat");
-  sc.innerHTML="<option value=\'\'>Selecione...</option>";
-  (SUBCATS[cat]||[]).forEach(s=>{
+  const allSubs=[...(SUBCATS[cat]||[]),...((state.config.customSubcats||{})[cat]||[])];
+  sc.innerHTML="<option value=''>Selecione...</option>";
+  allSubs.forEach(s=>{
     const o=document.createElement("option"); o.value=s; o.textContent=s; sc.appendChild(o);
   });
+  const add=document.createElement("option"); add.value="__addsub__"; add.textContent="➕ Adicionar subcategoria..."; sc.appendChild(add);
+}
+
+function checkAddSubcat(){
+  const sc=$("fSubcat");
+  if(sc.value==="__addsub__"){
+    const cat=$("fCat").value;
+    const nova=prompt("Nome da nova subcategoria:","");
+    if(nova && nova.trim()){
+      if(!state.config.customSubcats) state.config.customSubcats={};
+      if(!state.config.customSubcats[cat]) state.config.customSubcats[cat]=[];
+      state.config.customSubcats[cat].push(nova.trim());
+      saveData();
+      updateSubcats();
+      sc.value=nova.trim();
+    } else {
+      sc.value="";
+    }
+  }
 }
 
 // ─── Transactions CRUD ────────────────────────────────────────
@@ -681,10 +753,11 @@ function addTransaction(){
   const cat=$("fCat").value;
   const sub=$("fSubcat").value;
   const amount=parseFloat($("fAmount").value);
+  const payment=$("fPayment").value;
   const type=$("fType").value;
   const note=$("fNote").value;
   if(!month||!cat||!amount){ toast("Preencha mês, categoria e valor","error"); return; }
-  const tx={id:uuid(),month,cat,sub,amount,type,note,user:state.currentUser.name,ts:Date.now()};
+  const tx={id:uuid(),month,cat,sub,amount,payment,type,note,user:state.currentUser.name,ts:Date.now()};
   state.transactions.push(tx);
   saveData();
   renderTransactions();
@@ -703,7 +776,7 @@ function deleteTransaction(id){
 
 function clearForm(){
   $("fCat").value=""; $("fSubcat").innerHTML="<option>Selecione...</option>";
-  $("fAmount").value=""; $("fNote").value=""; $("fType").value="Entrada";
+  $("fAmount").value=""; $("fNote").value=""; $("fType").value="Entrada"; $("fPayment").value="";
 }
 
 function renderTransactions(){
@@ -711,20 +784,23 @@ function renderTransactions(){
   const search=$("searchTx").value.toLowerCase();
   let txs=[...state.transactions].sort((a,b)=>b.ts-a.ts);
   if(filterM) txs=txs.filter(t=>t.month===filterM);
-  if(search) txs=txs.filter(t=>(t.cat+t.sub+t.note+t.user).toLowerCase().includes(search));
+  if(search) txs=txs.filter(t=>(t.cat+t.sub+t.note+t.user+(t.payment||"")).toLowerCase().includes(search));
   const tb=$("txBody");
   if(!txs.length){
-    tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted)">Nenhum lançamento encontrado</td></tr>';
+    tb.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--muted)">Nenhum lançamento encontrado</td></tr>';
     return;
   }
+  const payIcon={Crédito:"💳",Débito:"🏦",Pix:"⚡",Dinheiro:"💵",Alimentação:"🍽️",Refeição:"🍛",Outros:"🔹"};
   tb.innerHTML=txs.map(t=>{
     const isEntry=t.type==="Entrada";
     const tagClass=isEntry?"tag-entrada":t.type==="Fixo"?"tag-fixo":"tag-variavel";
+    const pay=t.payment?(payIcon[t.payment]||"")+" "+t.payment:"—";
     return `<tr>
       <td>${formatMonth(t.month)}</td>
-      <td><span class="cat-dot" style="background:${CAT_COLORS[t.cat]||"#ccc"}"></span>${t.cat}</td>
+      <td><span class="cat-dot" style="background:${CAT_COLORS[t.cat]||"#999"}"></span>${t.cat}</td>
       <td style="color:var(--muted)">${t.sub||"—"}</td>
       <td class="${isEntry?"amount-pos":"amount-neg"}">${isEntry?"+":"-"} ${fmt(t.amount)}</td>
+      <td style="font-size:12px">${pay}</td>
       <td><span class="tag ${tagClass}">${t.type}</span></td>
       <td style="color:var(--muted);font-size:12px">${t.note||"—"}</td>
       <td style="font-size:11px;color:var(--muted)">${t.user}</td>
@@ -930,8 +1006,8 @@ function saveRenda(){
 }
 function savePasswords(){
   const p1=$("pw1").value; const p2=$("pw2").value;
-  if(p1) state.config.users.lira.password=p1;
-  if(p2) state.config.users.marido.password=p2;
+  if(p1) state.config.users.anderson.password=p1;
+  if(p2) state.config.users.leandro.password=p2;
   saveData(); $("pw1").value=""; $("pw2").value="";
   toast("Senhas atualizadas! Faça login novamente na próxima vez.");
 }
