@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finance Book</title>
+<title>Finance Book | The Lira Box</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -279,7 +279,7 @@ tr:hover td{background:var(--surface2)}
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">
-      <h1>Finance <span>Book</span> </h1>
+      <h1>Finance <span>Book</span></h1>
       <p>Painel Financeiro do Casal &nbsp;·&nbsp; Acesso Privado</p>
     </div>
     <div class="login-divider"></div>
@@ -293,7 +293,7 @@ tr:hover td{background:var(--surface2)}
     </div>
     <button class="btn-login" onclick="doLogin()">Entrar</button>
     <div class="login-error" id="loginError">Usuário ou senha incorretos.</div>
-    <p style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Acesso restrito ao casal · © The Lira Box</p>
+    <p style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Acesso restrito ao casal · © Finance Book</p>
   </div>
 </div>
 
@@ -303,7 +303,7 @@ tr:hover td{background:var(--surface2)}
 <div id="app">
   <!-- Topbar -->
   <div class="topbar">
-    <div class="topbar-brand">The <span>Lira</span> Box <small style="font-size:13px;font-weight:400;color:var(--muted);font-family:var(--font-body)">· Finanças</small></div>
+    <div class="topbar-brand">Finance <span>Book</span> <small style="font-size:13px;font-weight:400;color:var(--muted);font-family:var(--font-body)">· The Lira Box</small></div>
     <div class="topbar-user">
       <div class="avatar" id="avatarInitial">L</div>
       <div class="user-info">
@@ -544,7 +544,7 @@ tr:hover td{background:var(--surface2)}
 const DEFAULT_CONFIG = {
   users: {
     anderson: { name: "Anderson", password: "lira2025", role: "admin" },
-    leandro:  { name: "Leandro",  password: "leco2025",  role: "editor" }
+    leandro:  { name: "Leandro",  password: "leco2025",  role: "admin" }
   },
   renda1: 4924,
   renda2: 4142,
@@ -599,12 +599,15 @@ function toast(msg, type="success"){
 }
 
 function getMonths(){
-  const months=[]; const now=new Date();
-  for(let i=0;i<24;i++){
-    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-    const val=d.getFullYear()+"-"+(d.getMonth()+1).toString().padStart(2,"0");
-    const label=d.toLocaleDateString("pt-BR",{month:"long",year:"numeric"});
+  const months=[];
+  const start=new Date(2026,4,1); // Maio 2026
+  const end=new Date(2032,11,1);  // Dezembro 2032
+  let cur=new Date(end);
+  while(cur>=start){
+    const val=cur.getFullYear()+"-"+(cur.getMonth()+1).toString().padStart(2,"0");
+    const label=cur.toLocaleDateString("pt-BR",{month:"long",year:"numeric"});
     months.push({val,label});
+    cur.setMonth(cur.getMonth()-1);
   }
   return months;
 }
@@ -620,6 +623,8 @@ function populateMonthSelects(){
       o.value=m.val; o.textContent=m.label.charAt(0).toUpperCase()+m.label.slice(1);
       el.appendChild(o);
     });
+    // Seleciona Maio/2026 como padrão (exceto filtro que fica em "Todos")
+    if(id!=="filterMonth") el.value="2026-05";
   });
 }
 
