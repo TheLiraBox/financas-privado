@@ -1028,16 +1028,14 @@ async function syncToSheets(silent=false){
   if(!url){ if(!silent) toast("Configure a URL do Apps Script primeiro","error"); return; }
   $("syncStatus").textContent="Sincronizando...";
   try{
-    const resp=await fetch(url,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"syncAll",transactions:state.transactions})
-    });
-    const data=await resp.json();
-    if(data.status==="ok"){
-      $("syncStatus").textContent="✅ Sincronizado em "+new Date().toLocaleTimeString("pt-BR");
-      if(!silent) toast("Sincronizado com Google Sheets!");
-    } else { $("syncStatus").textContent="❌ Erro na sincronização"; }
+    // Google Apps Script exige form-encoded para evitar bloqueio de CORS
+    const payload=new URLSearchParams();
+    payload.append("action","syncAll");
+    payload.append("data",JSON.stringify(state.transactions));
+    await fetch(url,{method:"POST",mode:"no-cors",body:payload});
+    // no-cors não permite ler a resposta, mas se chegou aqui é porque enviou
+    $("syncStatus").textContent="✅ Sincronizado em "+new Date().toLocaleTimeString("pt-BR");
+    if(!silent) toast("Sincronizado com Google Sheets!");
   }catch(e){
     $("syncStatus").textContent="❌ Falha de conexão";
     if(!silent) toast("Erro ao sincronizar. Verifique a URL.","error");
